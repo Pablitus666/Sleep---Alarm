@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="AppAlreadyRunningMessage" xml:space="preserve">
+    <value>AlarmaSueño уже запущено.</value>
+  </data>
+  <data name="AppRunningTitle" xml:space="preserve">
+    <value>Приложение запущено</value>
+  </data>
+  <data name="UnexpectedErrorClosure" xml:space="preserve">
+    <value>Произошла непредвиденная ошибка. Приложение будет закрыто.</value>
+  </data>
+  <data name="AppErrorTitle" xml:space="preserve">
+    <value>Ошибка приложения</value>
+  </data>
+  <data name="ErrorDetailsPrefix" xml:space="preserve">
+    <value>Детали: </value>
+  </data>
+  <data name="NoExceptionDetails" xml:space="preserve">
+    <value>Детали исключения не предоставлены.</value>
+  </data>
+  <data name="LogWriteFailure" xml:space="preserve">
+    <value>Ошибка записи в журнал: </value>
+  </data>
+  <data name="ButtonSaveAlarmText" xml:space="preserve">
+    <value>Сохранить будильник 💾</value>
+  </data>
+  <data name="AlarmSavedMessage" xml:space="preserve">
+    <value>Будильник установлен на {0:HH:mm}. 
+Пора ложиться спать! 😉</value>
+  </data>
+  <data name="AutoStartConfigErrorMessage" xml:space="preserve">
+    <value>Ошибка изменения настроек автозапуска: {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="AlarmPostponedMessage" xml:space="preserve">
+    <value>Будильник отложен на {0} минут. Отдохните! 😴</value>
+  </data>
+  <data name="AlarmPostponedFallbackMessage" xml:space="preserve">
+    <value>Будильник отложен на 10 минут. Отдохните! 😴</value>
+  </data>
+  <data name="AlarmTimeDisplayMessage" xml:space="preserve">
+    <value>Будильник прозвенит в: {0:HH:mm}</value>
+  </data>
+  <data name="SleepWellMessage" xml:space="preserve">
+    <value>Спокойной ночи! Желаю вам спокойного сна. 😴</value>
+  </data>
+  <data name="PostponeButtonText" xml:space="preserve">
+    <value>Отложить {0} мин
+⏰</value>
+  </data>
+  <data name="CloseButtonText" xml:space="preserve">
+    <value>Я иду спать
+🌙</value>
+  </data>
+  <data name="StartWithWindowsCheckbox" xml:space="preserve">
+    <value>Запускать с Windows</value>
+  </data>
+  <data name="LockSettingsCheckbox" xml:space="preserve">
+    <value>Заблокировать настройки будильника</value>
+  </data>
+  <data name="MotivationPhraseDefault" xml:space="preserve">
+    <value>Мотивационная фраза</value>
+  </data>
+  <data name="ConfirmationDialogTitle" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="TrayIconShowText" xml:space="preserve">
+    <value>Показать</value>
+  </data>
+  <data name="TrayIconExitText" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>AlarmaSueño</value>
+  </data>
+  <data name="ConfirmationMessageDefault" xml:space="preserve">
+    <value>Сообщение с подтверждением</value>
+  </data>
+  <data name="ButtonOkText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AboutFormTitle" xml:space="preserve">
+    <value>О AlarmaSueño</value>
+  </data>
+  <data name="AboutFormInfoLabel" xml:space="preserve">
+    <value>Разработано: 
+Pablo Téllez A.
+
+Tarija - 2026.</value>
+  </data>
+  <data name="AboutFormCloseButton" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="MainFormTitle" xml:space="preserve">
+    <value>Будильник для сна</value>
+  </data>
+</root>

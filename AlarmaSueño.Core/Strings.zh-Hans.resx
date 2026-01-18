@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="AppAlreadyRunningMessage" xml:space="preserve">
+    <value>AlarmaSueño 已在运行。</value>
+  </data>
+  <data name="AppRunningTitle" xml:space="preserve">
+    <value>应用程序正在运行</value>
+  </data>
+  <data name="UnexpectedErrorClosure" xml:space="preserve">
+    <value>发生意外错误。应用程序将关闭。</value>
+  </data>
+  <data name="AppErrorTitle" xml:space="preserve">
+    <value>应用程序错误</value>
+  </data>
+  <data name="ErrorDetailsPrefix" xml:space="preserve">
+    <value>详情: </value>
+  </data>
+  <data name="NoExceptionDetails" xml:space="preserve">
+    <value>未提供异常详细信息。</value>
+  </data>
+  <data name="LogWriteFailure" xml:space="preserve">
+    <value>写入日志失败: </value>
+  </data>
+  <data name="ButtonSaveAlarmText" xml:space="preserve">
+    <value>保存闹钟 💾</value>
+  </data>
+  <data name="AlarmSavedMessage" xml:space="preserve">
+    <value>闹钟已保存于 {0:HH:mm}。 
+该上床睡觉了！ 😉</value>
+  </data>
+  <data name="AutoStartConfigErrorMessage" xml:space="preserve">
+    <value>更改自动启动设置时出错: {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="AlarmPostponedMessage" xml:space="preserve">
+    <value>闹钟推迟 {0} 分钟。请好好休息！ 😴</value>
+  </data>
+  <data name="AlarmPostponedFallbackMessage" xml:space="preserve">
+    <value>闹钟推迟 10 分钟。请好好休息！ 😴</value>
+  </data>
+  <data name="AlarmTimeDisplayMessage" xml:space="preserve">
+    <value>闹钟将在 {0:HH:mm} 响起</value>
+  </data>
+  <data name="SleepWellMessage" xml:space="preserve">
+    <value>晚安！祝您有个安稳的睡眠。 😴</value>
+  </data>
+  <data name="PostponeButtonText" xml:space="preserve">
+    <value>推迟 {0} 分钟
+⏰</value>
+  </data>
+  <data name="CloseButtonText" xml:space="preserve">
+    <value>我要去睡觉了
+🌙</value>
+  </data>
+  <data name="StartWithWindowsCheckbox" xml:space="preserve">
+    <value>随 Windows 启动</value>
+  </data>
+  <data name="LockSettingsCheckbox" xml:space="preserve">
+    <value>锁定闹钟设置</value>
+  </data>
+  <data name="MotivationPhraseDefault" xml:space="preserve">
+    <value>励志短语</value>
+  </data>
+  <data name="ConfirmationDialogTitle" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="TrayIconShowText" xml:space="preserve">
+    <value>显示</value>
+  </data>
+  <data name="TrayIconExitText" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>AlarmaSueño</value>
+  </data>
+  <data name="ConfirmationMessageDefault" xml:space="preserve">
+    <value>确认信息</value>
+  </data>
+  <data name="ButtonOkText" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="AboutFormTitle" xml:space="preserve">
+    <value>关于 AlarmaSueño</value>
+  </data>
+  <data name="AboutFormInfoLabel" xml:space="preserve">
+    <value>开发者： 
+Pablo Téllez A.
+
+Tarija - 2026.</value>
+  </data>
+  <data name="AboutFormCloseButton" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="MainFormTitle" xml:space="preserve">
+    <value>睡眠闹钟</value>
+  </data>
+</root>

@@ -1,0 +1,66 @@
+# Visual Studio / .NET
+
+## Ignore all files in the root except for the solution file and this .gitignore file
+# For other project files, you will need to explicitly un-ignore them.
+#/*
+#!*.sln
+#!.gitignore
+
+## Ignore build results
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+
+## Ignore other intermediate files
+*.user
+*.suo
+*.userprefs
+*.DS_Store
+*.vs
+.vs/
+*.opensdf
+*.sdf
+
+# Ignore log files
+*.log
+
+# Ignore local settings
+*.local.xml
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.[Tt]est[Rr]esult.xml
+*.VisualState.xml
+
+# Ignore ReSharper files
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Ignore Rider files
+.idea/
+
+# Ignore packages
+packages/
+*.nupkg
+
+# Ignore AppVeyor test reports
+*.AppVeyor.TestResult.xml
+
+# Ignore deployment files
+*.deploy
+/results/
+
+# Ignore user-specific files
+*.csproj.user
+
+# Mac files
+.DS_Store
+
+# Thumbnails
+Thumbs.db

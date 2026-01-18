@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <data name="AppAlreadyRunningMessage" xml:space="preserve">
+    <value>AlarmaSueño is already running.</value>
+  </data>
+  <data name="AppRunningTitle" xml:space="preserve">
+    <value>Application Running</value>
+  </data>
+  <data name="UnexpectedErrorClosure" xml:space="preserve">
+    <value>An unexpected error has occurred. The application will close.</value>
+  </data>
+  <data name="AppErrorTitle" xml:space="preserve">
+    <value>Application Error</value>
+  </data>
+  <data name="ErrorDetailsPrefix" xml:space="preserve">
+    <value>Details: </value>
+  </data>
+  <data name="NoExceptionDetails" xml:space="preserve">
+    <value>No exception details were provided.</value>
+  </data>
+  <data name="LogWriteFailure" xml:space="preserve">
+    <value>Failed to write to log: </value>
+  </data>
+  <data name="ButtonSaveAlarmText" xml:space="preserve">
+    <value>Save Alarm 💾</value>
+  </data>
+  <data name="AlarmSavedMessage" xml:space="preserve">
+    <value>Alarm saved for {0:HH:mm}. 
+Time to go to bed! 😉</value>
+  </data>
+  <data name="AutoStartConfigErrorMessage" xml:space="preserve">
+    <value>Error changing auto-start settings: {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="AlarmPostponedMessage" xml:space="preserve">
+    <value>Alarm postponed for {0} minutes. Take the time to rest! 😴</value>
+  </data>
+  <data name="AlarmPostponedFallbackMessage" xml:space="preserve">
+    <value>Alarm postponed for 10 minutes. Take the time to rest! 😴</value>
+  </data>
+  <data name="AlarmTimeDisplayMessage" xml:space="preserve">
+    <value>The alarm will sound at: {0:HH:mm}</value>
+  </data>
+  <data name="SleepWellMessage" xml:space="preserve">
+    <value>Good night! May you have a restful sleep. 😴</value>
+  </data>
+  <data name="PostponeButtonText" xml:space="preserve">
+    <value>Snooze {0} min
+⏰</value>
+  </data>
+  <data name="CloseButtonText" xml:space="preserve">
+    <value>I'm going to sleep
+🌙</value>
+  </data>
+  <data name="StartWithWindowsCheckbox" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
+  <data name="LockSettingsCheckbox" xml:space="preserve">
+    <value>Lock alarm settings</value>
+  </data>
+  <data name="MotivationPhraseDefault" xml:space="preserve">
+    <value>Motivational Phrase</value>
+  </data>
+  <data name="ConfirmationDialogTitle" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="TrayIconShowText" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="TrayIconExitText" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>AlarmaSueño</value>
+  </data>
+  <data name="ConfirmationMessageDefault" xml:space="preserve">
+    <value>Confirmation Message</value>
+  </data>
+  <data name="ButtonOkText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AboutFormTitle" xml:space="preserve">
+    <value>About AlarmaSueño</value>
+  </data>
+  <data name="AboutFormInfoLabel" xml:space="preserve">
+    <value>Developed by: 
+Pablo Téllez A.
+
+Tarija - 2026.</value>
+  </data>
+  <data name="AboutFormCloseButton" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="MainFormTitle" xml:space="preserve">
+    <value>Sleep Alarm</value>
+  </data>
+</root>
