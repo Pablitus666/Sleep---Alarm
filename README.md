@@ -6,7 +6,7 @@ El proyecto sigue principios **Clean Architecture**, **SOLID**, **Inyección de 
 
 > 📦 **Distribución:** el proyecto se entrega como **archivo ejecutable (.exe)** listo para usar, disponible en la sección **Releases** del repositorio.
 
-![Social Preview](images/Preview.png)
+![Social Preview](AlarmaSueño/images/Preview.png)
 
 ---
 
@@ -98,7 +98,7 @@ El proyecto incluye pruebas unitarias utilizando **Moq** para validar la lógica
 
 ## 📸 Capturas de Pantalla
 
-![Pantalla Principal](images/screenshot.png)
+![Pantalla Principal](AlarmaSueño/images/screenshot.png)
 
 ---
 
