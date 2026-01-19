@@ -129,7 +129,7 @@ El proyecto incluye pruebas unitarias utilizando **Moq** para validar la lógica
 ## 📦 Instalación (Release)
 
 1. Ve a la **sección Releases** del repositorio:
-   👉 [https://github.com/Pablitus666/AlarmaSueño/releases](https://github.com/Pablitus666/AlarmaSueño/releases)
+   👉 [https://github.com/Pablitus666/Sleep---Alarm/releases](https://github.com/Pablitus666/Sleep---Alarm/releases) 
 2. Descarga el archivo:
 
    * `AlarmaSueño.exe`
