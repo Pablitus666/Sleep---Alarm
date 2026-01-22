@@ -16,15 +16,8 @@ namespace AlarmaSueño.Implementations
 
         public void LogException(Exception? ex)
         {
-            // I18n.GetString might not be initialized yet if an error occurs very early.
-            // Use a fallback for I18n.GetString if ServiceProvider is null.
-            string errorDetailsPrefix = Program.ServiceProvider != null ? I18n.GetString("ErrorDetailsPrefix") : "Details: ";
-            string noExceptionDetails = Program.ServiceProvider != null ? I18n.GetString("NoExceptionDetails") : "No exception details were provided.";
-            string logWriteFailure = Program.ServiceProvider != null ? I18n.GetString("LogWriteFailure") : "Failed to write to log: ";
-
-
             string logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}]" + Environment.NewLine +
-                                $"{errorDetailsPrefix}{(ex?.Message ?? noExceptionDetails)}" + Environment.NewLine +
+                                $"Details: {(ex?.Message ?? "No exception details were provided.")}" + Environment.NewLine +
                                 $"Stack Trace: {ex?.StackTrace}" + Environment.NewLine +
                                 "---------------------------------------------------" + Environment.NewLine;
             
@@ -34,7 +27,35 @@ namespace AlarmaSueño.Implementations
             }
             catch (Exception logEx)
             {
-                Console.WriteLine($"{logWriteFailure}{logEx.Message}");
+                Console.WriteLine($"Failed to write to log: {logEx.Message}");
+            }
+        }
+
+        public void LogError(string message)
+        {
+            string logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] ERROR: {message}" + Environment.NewLine +
+                                "---------------------------------------------------" + Environment.NewLine;
+            try
+            {
+                File.AppendAllText(_appPaths.LogFilePath, logMessage);
+            }
+            catch (Exception logEx)
+            {
+                Console.WriteLine($"Failed to write to log: {logEx.Message}");
+            }
+        }
+
+        public void LogInformation(string message)
+        {
+            string logMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] INFO: {message}" + Environment.NewLine +
+                                "---------------------------------------------------" + Environment.NewLine;
+            try
+            {
+                File.AppendAllText(_appPaths.LogFilePath, logMessage);
+            }
+            catch (Exception logEx)
+            {
+                Console.WriteLine($"Failed to write to log: {logEx.Message}");
             }
         }
     }

@@ -11,60 +11,56 @@ namespace AlarmaSueño.Core
         private WaveStream? audioFile;
         private WaveOutEvent? outputDevice;
         private Stream? resourceStream;
-        private readonly ILogger _logger; // Added ILogger dependency
+        private readonly ILogger _logger;
+        private readonly Assembly _resourceAssembly;
 
-        public AudioPlayer(ILogger logger) // Constructor modified to accept ILogger
+        public AudioPlayer(ILogger logger, Assembly resourceAssembly)
         {
             _logger = logger;
+            _resourceAssembly = resourceAssembly;
         }
 
         public void PlayAlarmSound(string resourceName = "alarm_sound.mp3")
         {
-            // This assumes the resource is embedded in the entry assembly (UI project)
-            var fullResourceName = $"AlarmaSueño.Resources.{resourceName}";
-            Console.WriteLine($"Intentando reproducir recurso embebido: {fullResourceName}");
-
             try
             {
-                // Use GetEntryAssembly to get the executable's assembly, not the Core DLL
-                var assembly = Assembly.GetEntryAssembly(); 
-                if (assembly == null)
+                // --- ROBUST RESOURCE FINDING ---
+                var allResourceNames = _resourceAssembly.GetManifestResourceNames();
+                string? actualResourceName = allResourceNames.FirstOrDefault(name => name.EndsWith(resourceName, StringComparison.OrdinalIgnoreCase));
+
+                if (string.IsNullOrEmpty(actualResourceName))
                 {
-                    Console.WriteLine("Error: No se pudo obtener el ensamblado de entrada (Entry Assembly).");
+                    _logger.LogError($"AudioPlayer Error: Could not find any resource ending with '{resourceName}' in assembly '{_resourceAssembly.FullName}'.");
                     return;
                 }
+                // --- END ROBUST RESOURCE FINDING ---
 
-                resourceStream = assembly.GetManifestResourceStream(fullResourceName);
+                resourceStream = _resourceAssembly.GetManifestResourceStream(actualResourceName);
 
                 if (resourceStream == null)
                 {
-                    Console.WriteLine($"Error: El recurso de audio no se encontró en {fullResourceName}");
-                    // Fallback for when running from a test context
-                    assembly = Assembly.GetExecutingAssembly();
-                    fullResourceName = $"AlarmaSueño.Core.Resources.{resourceName}";
-                    resourceStream = assembly.GetManifestResourceStream(fullResourceName);
-                     if (resourceStream == null)
-                     {
-                        Console.WriteLine($"Error: El recurso de audio tampoco se encontró en {fullResourceName}");
-                        return;
-                     }
+                    _logger.LogError($"AudioPlayer Error: Resource stream was unexpectedly null for '{actualResourceName}'.");
+                    return;
                 }
+
+                // Copy to MemoryStream to ensure it's seekable and can be read multiple times.
+                MemoryStream memoryStream = new MemoryStream();
+                resourceStream.CopyTo(memoryStream);
+                memoryStream.Position = 0; // Reset position to the beginning
 
                 // Detener y liberar recursos si ya se está reproduciendo algo
                 StopAlarmSound();
 
                 outputDevice = new WaveOutEvent();
-                // Usamos Mp3FileReader que puede leer directamente de un Stream
-                audioFile = new Mp3FileReader(resourceStream);
+                audioFile = new Mp3FileReader(memoryStream); // Use the MemoryStream
                 
                 outputDevice.Init(audioFile);
                 outputDevice.Play();
                 outputDevice.PlaybackStopped += OnPlaybackStopped;
-                Console.WriteLine("Reproducción iniciada desde recurso embebido.");
             }
             catch (Exception ex)
             {
-                _logger.LogException(ex); // Changed from Program.LogExceptionToFile
+                _logger.LogException(ex);
             }
         }
 

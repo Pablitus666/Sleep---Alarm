@@ -78,6 +78,12 @@ Time to go to bed! 😉</value>
   <data name="LockSettingsCheckbox" xml:space="preserve">
     <value>Lock alarm settings</value>
   </data>
+  <data name="LockAlarmButtonText" xml:space="preserve">
+    <value>Lock Alarm 🔒</value>
+  </data>
+  <data name="UnlockAlarmButtonText" xml:space="preserve">
+    <value>Unlock 🔓</value>
+  </data>
   <data name="MotivationPhraseDefault" xml:space="preserve">
     <value>Motivational Phrase</value>
   </data>
@@ -113,5 +119,32 @@ Tarija - 2026.</value>
   </data>
   <data name="MainFormTitle" xml:space="preserve">
     <value>Sleep Alarm</value>
+  </data>
+  <data name="EnableAlarmCheckbox" xml:space="preserve">
+    <value>Activar Alarma</value>
+  </data>
+  <data name="AlarmDeactivatedMessage" xml:space="preserve">
+    <value>Alarm deactivated. The scheduled task has been removed.</value>
+  </data>
+  <data name="DeactivateAlarmButtonText" xml:space="preserve">
+    <value>Deactivate Alarm</value>
+  </data>
+  <data name="ActivateAlarmButtonIcon" xml:space="preserve">
+    <value>🟢</value>
+  </data>
+  <data name="DeactivateAlarmButtonIcon" xml:space="preserve">
+    <value>🔴</value>
+  </data>
+  <data name="SnoozeActiveTitle" xml:space="preserve">
+    <value>Snooze Active</value>
+  </data>
+  <data name="SnoozeActivePrompt" xml:space="preserve">
+    <value>An alarm is currently snoozed. Do you want to cancel the snooze and schedule a new alarm?</value>
+  </data>
+  <data name="ButtonYesText" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="ButtonNoText" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>

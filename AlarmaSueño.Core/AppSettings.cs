@@ -9,6 +9,7 @@ namespace AlarmaSueño.Core
         public int PostponeMinutes { get; set; } = 10;
         public bool AutoStart { get; set; }
         public bool IsLocked { get; set; }
+        public DateTime? SnoozeUntil { get; set; }
 
         public AppSettings()
         {

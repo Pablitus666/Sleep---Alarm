@@ -14,7 +14,7 @@ namespace AlarmaSueño
         public event EventHandler? ShowApplicationRequested;
         public event EventHandler? ExitApplicationRequested;
 
-        public TrayIconManager(Icon appIcon)
+        public TrayIconManager(Icon appIcon, bool showOnRequest = true)
         {
             _contextMenu = new ContextMenuStrip();
             _contextMenu.Items.Add(I18n.GetString("TrayIconShowText"), null, OnShowApplication);
@@ -28,7 +28,10 @@ namespace AlarmaSueño
                 Visible = true
             };
 
-            _notifyIcon.DoubleClick += OnShowApplication;
+            if (showOnRequest)
+            {
+                _notifyIcon.DoubleClick += OnShowApplication;
+            }
         }
 
         private void OnShowApplication(object? sender, EventArgs e)

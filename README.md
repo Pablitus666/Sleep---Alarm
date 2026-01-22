@@ -1,8 +1,8 @@
-# ⏰ AlarmaSueño – Alarma Motivacional para Windows (C#)
+# ⏰ AlarmaSueño – Alarma Motivacional para Dormir Mejor (Windows | C#)
 
-Aplicación de escritorio desarrollada en **C# con Windows Forms**, orientada a mejorar la rutina de sueño mediante una **alarma inteligente con frases motivacionales**, ejecución en segundo plano, integración con la bandeja del sistema y una arquitectura moderna preparada para evolución futura.
+AlarmaSueño es una aplicación de escritorio para Windows, desarrollada en **C# con Windows Forms**, cuyo objetivo es mejorar la rutina de sueño mediante una alarma inteligente, frases motivacionales, ejecución en segundo plano y una arquitectura sólida y mantenible.
 
-El proyecto sigue principios **Clean Architecture**, **SOLID**, **Inyección de Dependencias (DI)** y cuenta con **pruebas unitarias con Moq**, garantizando mantenibilidad, testabilidad y escalabilidad.
+El proyecto aplica **Clean Architecture**, principios **SOLID** e **Inyección de Dependencias (DI)**, con énfasis en persistencia de estado, confiabilidad, experiencia de usuario e integración profunda con el sistema operativo.
 
 > 📦 **Distribución:** el proyecto se entrega como **archivo ejecutable (.exe)** listo para usar, disponible en la sección **Releases** del repositorio.
 
@@ -27,6 +27,7 @@ El proyecto sigue principios **Clean Architecture**, **SOLID**, **Inyección de 
 
 * [✨ Características](#-características)
 * [🏗️ Arquitectura](#️-arquitectura)
+* [⚙️ Conceptos Clave](#-conceptos-clave)
 * [🧪 Pruebas Unitarias](#-pruebas-unitarias)
 * [📸 Capturas de Pantalla](#-capturas-de-pantalla)
 * [📋 Requisitos](#-requisitos)
@@ -41,44 +42,83 @@ El proyecto sigue principios **Clean Architecture**, **SOLID**, **Inyección de 
 
 ## ✨ Características
 
-* ⏰ **Alarma programable** con ejecución automática
+* ⏰ **Ejecución automática** de alarmas mediante el **Programador de Tareas de Windows**
 * 💬 **Frases motivacionales dinámicas** al activarse la alarma
 * 🔔 **Reproducción de audio** integrada
 * 💤 **Función posponer (Snooze)** configurable
-* 🔒 **Bloqueo de configuración** para evitar cambios accidentales
+* 🔒 **Sistema de Bloqueo de configuración** para evitar cambios accidentales
 * 🚀 **Inicio automático con Windows** (opcional)
+* 🧠 **Persistencia completa del estado** (alarma, bloqueo y snooze sobreviven reinicios)
 * 🌐 **Soporte multi‑idioma (I18n)**
 * 🖥️ **Ejecución en segundo plano** con icono en la bandeja del sistema
-* 🎨 **Interfaz moderna** con botones e imágenes personalizadas
+* 🖥️ **Integración con la bandeja del sistema** (Tray Icon)
+* 🔁 **Ejecución de una sola instancia de la aplicación**
+* 🎨 **Interfaz moderna y mejorada** con efectos visuales, logotipo dinámico y diálogos personalizados
+* 🚀 **Ejecución en segundo** plano con restauración controlada de la ventana
 
 ---
 
 ## 🏗️ Arquitectura
 
-El proyecto está organizado siguiendo **Clean Architecture**, separando responsabilidades:
+El proyecto está organizada siguiendo **Clean Architecture**, garantizando separación de responsabilidades y facilidad de mantenimiento:
 
 ```
 AlarmaSueño
 │
-├── AlarmaSueño.Core        → Lógica de negocio
-│   ├── AlarmManager
-│   ├── SettingsManager
-│   ├── PhraseProvider
-│   └── Interfaces (IAlarmManager, IAudioPlayer, etc.)
+├── AlarmaSueño.Core
+│ ├── AlarmManager
+│ ├── SettingsManager
+│ ├── PhraseProvider
+│ ├── AudioPlayer
+│ ├── TrayIconManager
+│ ├── WindowsIntegration
+│ └── Interfaces
 │
-├── AlarmaSueño.UI          → Windows Forms (UI)
-│   ├── MainForm
-│   ├── Dialogs
-│   └── Custom Controls
+├── AlarmaSueño.UI
+│ ├── MainForm
+│ ├── Dialogs (ConfirmationDialog, AboutForm, etc.)
+│ ├── ResourceLoader
+│ └── UI Enhancers
 │
-├── AlarmaSueño.Tests       → Pruebas unitarias (Moq)
+├── AlarmaSueño.Infrastructure
+│ ├── Persistencia basada en archivos
+│ ├── Logging
+│ └── Integración con el sistema operativo
 │
-└── Assets / Resources      → Imágenes, iconos, audio
+└── Assets / Resources
+├── Imágenes
+├── Iconos
+└── Audio
+
 ```
 
-✔️ Inyección de dependencias aplicada
-✔️ Código desacoplado
-✔️ Preparado para migración futura a **WPF / MAUI**
+✔️ Inyección de dependencias con Microsoft.Extensions.DependencyInjection 
+✔️ UI desacoplada de la lógica de negocio 
+✔️ Preparado para futuras migraciones **WPF / MAUI**
+
+---
+
+## ⚙️ Conceptos Clave
+
+🔁 Persistencia del Estado
+
+* El estado de snooze se conserva incluso si la aplicación se cierra o el sistema se reinicia
+
+* El bloqueo de la alarma se mantiene activo hasta que el usuario lo deshabilita explícitamente
+
+🖥️ Integración con Windows
+
+* Uso del Programador de Tareas de Windows para garantizar la ejecución de la alarma
+
+* Icono en la bandeja del sistema para restaurar o cerrar la aplicación
+
+* Prevención de múltiples instancias mediante mensajería de Windows
+
+🔒 Lógica de Bloqueo y Posposición
+
+* El usuario puede bloquear la configuración de la alarma
+
+* Durante el snooze, toda la interfaz queda deshabilitada hasta que expire
 
 ---
 
@@ -109,20 +149,20 @@ El proyecto incluye pruebas unitarias utilizando **Moq** para validar la lógica
 
   * Para ejecutar el `.exe` **no es necesario instalar Visual Studio**
   * Puede requerir **.NET Desktop Runtime 6.0 o superior** si no está presente
-
+  
 ---
 
 ## 🚀 Uso
 
 1. Ejecuta `AlarmaSueño.exe`
 2. Configura la hora de la alarma
-3. (Opcional) Activa inicio con Windows
-4. Minimiza la aplicación (queda en la bandeja del sistema)
+3. (Opcional) Bloquea la configuración
+4. Se Cierra o Minimiza la aplicación automaticamene (queda en la bandeja del sistema y continúa en segundo plano)
 5. Al activarse la alarma:
 
    * Se reproduce el audio
    * Se muestra una frase motivacional
-   * Puedes **cerrar** o **posponer**
+   * Puedes **cerrar** o **posponer** la alarma 
 
 ---
 
@@ -145,6 +185,7 @@ El proyecto incluye pruebas unitarias utilizando **Moq** para validar la lógica
 * Manejo seguro de excepciones con logging
 * Liberación correcta de recursos (`Dispose`)
 * Separación estricta de capas
+* Sin rutas del sistema codificadas de forma rígida
 * Código preparado para pruebas y refactorización
 
 ---
@@ -155,7 +196,7 @@ Las contribuciones son bienvenidas:
 
 * Fork del repositorio
 * Crear rama feature / fix
-* Pull Request documentado
+* Enviar un Pull Request bien documentado
 
 ---
 

@@ -24,44 +24,70 @@ namespace AlarmaSueño // Changed
         private static readonly IntPtr HWND_BROADCAST = new IntPtr(0xffff);
         
         [STAThread]
-        static void Main()
-        {
-            using (Mutex mutex = new Mutex(true, AppMutexName, out bool createdNew))
-            {
-                if (createdNew)
-                {
-                    Application.SetHighDpiMode(HighDpiMode.SystemAware);
-                    ApplicationConfiguration.Initialize();
-
-                    var host = CreateHostBuilder().Build();
-                    ServiceProvider = host.Services;
-
-                    Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
-                    AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-                    
-                    // We will migrate MainForm later
-                    Application.Run(ServiceProvider.GetRequiredService<MainForm>());
+                                static void Main(string[] args)
+                                {
+                                    bool isAlarmTrigger = args.Length > 0 && args[0].Equals("ALARM_TRIGGER", StringComparison.OrdinalIgnoreCase);                    // This block contains common initialization logic for both scenarios
+                    Action initializeAndRun = () =>
+                    {
+                        Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                        ApplicationConfiguration.Initialize();
+        
+                        var host = CreateHostBuilder(args).Build();
+                        ServiceProvider = host.Services;
+        
+                        Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+                        AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+        
+                        var mainForm = ServiceProvider.GetRequiredService<MainForm>();
+                        Application.Run(mainForm);
+                    };
+        
+                    if (isAlarmTrigger)
+                    {
+                        // If it's an alarm trigger, always run a new instance to show the alarm
+                        initializeAndRun();
+                    }
+                    else // Not an alarm trigger, proceed with mutex for single instance config UI
+                    {
+                        using (Mutex mutex = new Mutex(true, AppMutexName, out bool createdNew))
+                        {
+                            if (createdNew)
+                            {
+                                // If no other instance is running, initialize and run the application
+                                initializeAndRun();
+                            }
+                            else
+                            {
+                                // If another instance is running, activate it
+                                PostMessage(HWND_BROADCAST, WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
+                            }
+                        }
+                    }
                 }
-                else
-                {
-                    PostMessage(HWND_BROADCAST, WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
-                }
-            }
-        }
 
         public static IServiceProvider? ServiceProvider { get; private set; }
 
-        static IHostBuilder CreateHostBuilder() =>
+        static IHostBuilder CreateHostBuilder(string[] args) => // Modified
             Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) => {
                     services.AddSingleton<IAppPaths, AppPaths>(); // Register AppPaths
                     services.AddSingleton<ILogger, Logger>(); // Register Logger
                     services.AddSingleton<ISettingsManager, SettingsManager>();
                     services.AddSingleton<IPhraseProvider, PhraseProvider>();
-                    services.AddSingleton<IAudioPlayer, AudioPlayer>();
+                    services.AddSingleton<IAudioPlayer>(provider => 
+                        new AudioPlayer(provider.GetRequiredService<ILogger>(), typeof(MainForm).Assembly));
                     services.AddSingleton<AlarmaSueño.Core.ITimer, WinFormsTimer>(); // Register ITimer with WinFormsTimer
                     services.AddSingleton<IAlarmManager, AlarmManager>(); // AlarmManager now takes ITimer
-                    services.AddSingleton<MainForm>();
+                    // Register MainForm with a factory that provides the args
+                    services.AddSingleton<MainForm>(provider =>
+                        new MainForm(
+                            provider.GetRequiredService<IAlarmManager>(),
+                            provider.GetRequiredService<IPhraseProvider>(),
+                            provider.GetRequiredService<IAudioPlayer>(),
+                            provider.GetRequiredService<ISettingsManager>(),
+                            provider.GetRequiredService<ILogger>(), // Add ILogger here
+                            args // Pass args here
+                        ));
                 });
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)

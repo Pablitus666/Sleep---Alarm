@@ -78,6 +78,12 @@
   <data name="LockSettingsCheckbox" xml:space="preserve">
     <value>Bloquear configuración de alarma</value>
   </data>
+  <data name="LockAlarmButtonText" xml:space="preserve">
+    <value>Bloquear Alarma 🔒</value>
+  </data>
+  <data name="UnlockAlarmButtonText" xml:space="preserve">
+    <value>Desbloquear 🔓</value>
+  </data>
   <data name="MotivationPhraseDefault" xml:space="preserve">
     <value>Frase Motivacional</value>
   </data>
@@ -113,5 +119,29 @@ Tarija - 2026.</value>
   </data>
   <data name="MainFormTitle" xml:space="preserve">
     <value>Alarma de Sueño</value>
+  </data>
+  <data name="AlarmDeactivatedMessage" xml:space="preserve">
+    <value>Alarma desactivada. La tarea programada ha sido eliminada.</value>
+  </data>
+  <data name="DeactivateAlarmButtonText" xml:space="preserve">
+    <value>Desactivar Alarma</value>
+  </data>
+  <data name="ActivateAlarmButtonIcon" xml:space="preserve">
+    <value>🟢</value>
+  </data>
+  <data name="DeactivateAlarmButtonIcon" xml:space="preserve">
+    <value>🔴</value>
+  </data>
+  <data name="SnoozeActiveTitle" xml:space="preserve">
+    <value>Alarma Pospuesta</value>
+  </data>
+  <data name="SnoozeActivePrompt" xml:space="preserve">
+    <value>Hay una alarma pospuesta. ¿Deseas cancelarla y programar una nueva?</value>
+  </data>
+  <data name="ButtonYesText" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="ButtonNoText" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>

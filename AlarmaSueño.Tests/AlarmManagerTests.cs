@@ -1,32 +1,12 @@
 using Xunit;
 using Moq;
 using System;
-using AlarmaSueño.Core; // Reference to the Core project
+using AlarmaSueño.Core;
 
 namespace AlarmaSueño.Tests
 {
     public class AlarmManagerTests
     {
-        [Fact]
-        public void SetAlarmTime_SetsCorrectly()
-        {
-            // Arrange
-            var mockTimer = new Mock<AlarmaSueño.Core.ITimer>();
-            var alarmManager = new AlarmManager(mockTimer.Object);
-            var testTime = new DateTime(2026, 1, 18, 10, 30, 0);
-
-            // Act
-            alarmManager.SetAlarmTime(testTime);
-
-            // Assert
-            // Cannot directly assert on _alarmTime as it's private.
-            // We would need to test its effect, e.g., if alarm triggers at correct time.
-            // This test is mostly a placeholder and would ideally involve
-            // checking the internal state via reflection or testing behavior.
-            // For now, we will rely on other tests to verify behavior driven by alarmTime.
-            Assert.True(true); 
-        }
-
         [Fact]
         public void Start_StartsTimer()
         {
@@ -57,54 +37,65 @@ namespace AlarmaSueño.Tests
         }
 
         [Fact]
-        public void Posponer_StopsAndRestartsAlarmWithNewTime()
+        public void Posponer_StartsTimer()
         {
             // Arrange
             var mockTimer = new Mock<AlarmaSueño.Core.ITimer>();
             var alarmManager = new AlarmManager(mockTimer.Object);
-            var initialTime = DateTime.Now.AddHours(1);
-            alarmManager.SetAlarmTime(initialTime);
-            alarmManager.Start();
-
-            // Reset mocks for clear verification of Posponer's actions
-            mockTimer.Invocations.Clear(); // Clear previous verifications
-
             int postponeMinutes = 5;
 
             // Act
             alarmManager.Posponer(postponeMinutes);
 
             // Assert
-            mockTimer.Verify(t => t.Stop(), Times.Once);
+            // Posponer should ensure the timer is running to check for the snooze time.
             mockTimer.Verify(t => t.Start(), Times.Once);
-            // We cannot directly verify the new _alarmTime, as it's private.
-            // The fact that Start() was called again implies a new time was set.
         }
 
         [Fact]
-        public void AlarmManager_RaisesAlarmTriggeredEventOnTickWhenTimeIsReached()
+        public void AlarmTimer_Tick_TriggersAlarmAfterPosponerTime()
         {
             // Arrange
             var mockTimer = new Mock<AlarmaSueño.Core.ITimer>();
             var alarmManager = new AlarmManager(mockTimer.Object);
-
-            // Set a dummy alarm time; it won't matter for this test's logic
-            // because we're directly triggering the 'Tick' event, and assuming
-            // DateTime.Now is greater than _alarmTime due to DateTime.MinValue.
-            alarmManager.SetAlarmTime(DateTime.MinValue); 
-
             bool alarmTriggered = false;
             alarmManager.AlarmTriggered += (sender, e) => alarmTriggered = true;
-            alarmManager.Start(); // Ensure the AlarmManager is "running" and subscribed
 
             // Act
-            // Simulate the timer's Tick event being raised.
-            // This will cause AlarmManager's AlarmTimer_Tick method to execute.
+            // 1. Snooze for a very short time (e.g., negative minutes to simulate time has passed)
+            alarmManager.Posponer(-1); 
+            alarmManager.Start();
+            
+            // 2. Simulate the timer tick
             mockTimer.Raise(t => t.Tick += null, EventArgs.Empty);
 
             // Assert
             Assert.True(alarmTriggered);
-            mockTimer.Verify(t => t.Stop(), Times.Once); // Ensure timer stops after triggering
+            // After triggering, the timer should stop
+            mockTimer.Verify(t => t.Stop(), Times.Once);
+        }
+
+        [Fact]
+        public void AlarmTimer_Tick_DoesNotTriggerAlarmBeforePosponerTime()
+        {
+            // Arrange
+            var mockTimer = new Mock<AlarmaSueño.Core.ITimer>();
+            var alarmManager = new AlarmManager(mockTimer.Object);
+            bool alarmTriggered = false;
+            alarmManager.AlarmTriggered += (sender, e) => alarmTriggered = true;
+
+            // Act
+            // 1. Snooze for a time in the future
+            alarmManager.Posponer(10); 
+            alarmManager.Start();
+
+            // 2. Simulate the timer tick
+            mockTimer.Raise(t => t.Tick += null, EventArgs.Empty);
+
+            // Assert
+            Assert.False(alarmTriggered);
+            // The timer should not stop if the alarm is not triggered
+            mockTimer.Verify(t => t.Stop(), Times.Never);
         }
     }
 }

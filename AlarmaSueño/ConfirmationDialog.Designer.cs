@@ -29,10 +29,16 @@ namespace AlarmaSueño
         private void InitializeComponent()
         {
             this.lblMessage = new System.Windows.Forms.Label();
-            this.btnOk = new AlarmaSueño.PressableImageButton();
-            this.btnOk.ImageNormal = AlarmaSueño.ResourceLoader.LoadImage("boton.png");
-            this.btnOk.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnOk.ForeColor = System.Drawing.Color.White;
+            this.btnYes = new AlarmaSueño.PressableImageButton();
+            this.btnNo = new AlarmaSueño.PressableImageButton();
+            
+            this.btnYes.ImageNormal = AlarmaSueño.ResourceLoader.LoadImage("boton.png");
+            this.btnYes.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnYes.ForeColor = System.Drawing.Color.White;
+
+            this.btnNo.ImageNormal = AlarmaSueño.ResourceLoader.LoadImage("boton.png");
+            this.btnNo.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnNo.ForeColor = System.Drawing.Color.White;
 
             this.SuspendLayout();
             // 
@@ -43,27 +49,35 @@ namespace AlarmaSueño
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMessage.Location = new System.Drawing.Point(12, 9);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(356, 80);
+            this.lblMessage.Size = new System.Drawing.Size(396, 80);
             this.lblMessage.TabIndex = 0;
             this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnOk
+            // btnYes
             // 
-            this.btnOk.Location = new System.Drawing.Point(115, 95);
-            this.btnOk.Name = "btnOk";
-            this.btnOk.Size = new System.Drawing.Size(150, 50);
-            this.btnOk.TabIndex = 1;
-            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
-
+            this.btnYes.Location = new System.Drawing.Point(50, 95);
+            this.btnYes.Name = "btnYes";
+            this.btnYes.Size = new System.Drawing.Size(150, 50);
+            this.btnYes.TabIndex = 1;
+            this.btnYes.Click += new System.EventHandler(this.btnYes_Click);
+            // 
+            // btnNo
+            // 
+            this.btnNo.Location = new System.Drawing.Point(220, 95);
+            this.btnNo.Name = "btnNo";
+            this.btnNo.Size = new System.Drawing.Size(150, 50);
+            this.btnNo.TabIndex = 2;
+            this.btnNo.Click += new System.EventHandler(this.btnNo_Click);
 
             // 
             // ConfirmationDialog
             // 
-            this.AcceptButton = this.btnOk; // Aceptar con la tecla Enter
+            this.AcceptButton = this.btnYes;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(380, 150);
-            this.Controls.Add(this.btnOk);
+            this.ClientSize = new System.Drawing.Size(420, 150);
+            this.Controls.Add(this.btnYes);
+            this.Controls.Add(this.btnNo);
             this.Controls.Add(this.lblMessage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -78,6 +92,7 @@ namespace AlarmaSueño
         #endregion
 
         private System.Windows.Forms.Label lblMessage;
-        private AlarmaSueño.PressableImageButton btnOk;
+        private AlarmaSueño.PressableImageButton btnYes;
+        private AlarmaSueño.PressableImageButton btnNo;
     }
 }

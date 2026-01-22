@@ -7,23 +7,21 @@ namespace AlarmaSueño.Core
     {
         public event EventHandler? AlarmTriggered;
 
-        private ITimer _alarmTimer; // Changed to ITimer
-        private DateTime _alarmTime;
+        private readonly ITimer _alarmTimer;
+        // _nextTriggerTime now represents the next snooze trigger time
+        private DateTime _nextTriggerTime;  
         private bool _isRunning;
 
-        // Constructor para inyección de dependencias
-        public AlarmManager(ITimer timer) // Constructor modified to accept ITimer
+        public AlarmManager(ITimer timer)
         {
             _alarmTimer = timer;
             _alarmTimer.Interval = 1000; // Comprobar cada segundo
             _alarmTimer.Tick += AlarmTimer_Tick;
             _isRunning = false;
+            _nextTriggerTime = DateTime.MaxValue; // Initialize to prevent immediate trigger
         }
 
-        public void SetAlarmTime(DateTime alarmTime)
-        {
-            _alarmTime = alarmTime;
-        }
+
 
         public void Start()
         {
@@ -45,20 +43,28 @@ namespace AlarmaSueño.Core
 
         public void Posponer(int minutes)
         {
-            // Detener la alarma actual (si está sonando) y establecer una nueva
-            Stop();
-            _alarmTime = DateTime.Now.AddMinutes(minutes);
-            Start();
+            // Posponer establece la próxima activación en el futuro cercano, sin afectar la configuración principal.
+            _nextTriggerTime = DateTime.Now.AddMinutes(minutes);
+            Start(); // Asegurarse de que el temporizador esté corriendo
         }
+
+        // Reset is no longer needed as daily scheduling is external.
+        // public void Reset() { }
 
         private void AlarmTimer_Tick(object? sender, EventArgs e)
         {
-            // Comprobar si la hora actual coincide o es posterior a la hora de la alarma
-            if (DateTime.Now >= _alarmTime)
+            if (!_isRunning) return;
+
+            // This logic is now only for snooze functionality.
+            if (DateTime.Now >= _nextTriggerTime)
             {
-                _alarmTimer.Stop(); // Detener el temporizador para evitar múltiples disparos
-                _isRunning = false;
+                // Stop temporarily to avoid multiple triggers while processing the event.
+                this.Stop();
+
                 AlarmTriggered?.Invoke(this, EventArgs.Empty);
+
+                // No recalculation for next day here. That's external.
+                // The snooze will be re-triggered by the user dismissing/postponing again.
             }
         }
     }

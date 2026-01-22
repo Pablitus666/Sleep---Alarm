@@ -29,21 +29,12 @@ namespace AlarmaSueño.Core
         {
             try
             {
-                // This assumes the resource is embedded in the entry assembly (UI project)
-                // var assembly = Assembly.GetEntryAssembly(); // No longer directly used
-                // if (assembly == null)
-                // {
-                //     throw new InvalidOperationException("No se pudo obtener el ensamblado de entrada (Entry Assembly).");
-                // }
-                
-                // El nombre del recurso es "NamespaceDelProyectoUI.NombreDelArchivo"
-                // var resourceName = "AlarmApp.UI.quotes.json"; // No longer hardcoded
-
                 using (Stream? stream = _resourceAssembly.GetManifestResourceStream(_quotesResourceName))
                 {
                     if (stream == null)
                     {
-                        throw new FileNotFoundException($"El recurso '{_quotesResourceName}' no se encontró en el ensamblado '{_resourceAssembly.FullName}'.", _quotesResourceName);
+                        _logger.LogError($"PhraseProvider Error: Resource stream was null for '{_quotesResourceName}' in assembly '{_resourceAssembly.FullName}'.");
+                        return;
                     }
                     using (StreamReader reader = new StreamReader(stream))
                     {
@@ -52,15 +43,14 @@ namespace AlarmaSueño.Core
                         if (loadedQuotes != null)
                         {
                             quotes = loadedQuotes;
+                            _logger.LogInformation($"Successfully loaded {quotes.Count} quotes.");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Log the error or handle it appropriately
-                _logger.LogException(ex); // Changed from Program.LogExceptionToFile
-                // The quotes list will remain empty, and ObtenerFrase will return a default string.
+                _logger.LogException(ex);
             }
         }
 

@@ -1,200 +1,140 @@
+using AlarmaSueño.Core;
 using System;
 using System.Diagnostics;
-using System.IO;
-using Microsoft.Win32;
-using Microsoft.Extensions.DependencyInjection;
-using AlarmaSueño.Core;
+using System.Reflection; 
+using System.IO; // Added
 
 namespace AlarmaSueño
 {
     public static class WindowsIntegration
     {
-        private const string TaskName = "AlarmaSueñoDailyAlarm";
-        private const string AppName = "AlarmaSueño";
+        private const string TaskName = "AlarmaSuenoTask"; // Unique task name
 
-        public static void AddScheduledTask()
+        public static void CreateOrUpdateScheduledTask(DateTime alarmTime, ILogger logger)
         {
-            try
+            logger.LogInformation("Using new task creation method (v3).");
+            string? executablePath = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(executablePath))
             {
-                string? appPath = Process.GetCurrentProcess().MainModule?.FileName; // Posiblemente nulo
-                if (string.IsNullOrEmpty(appPath))
-                {
-                    Console.WriteLine("Error: No se pudo obtener la ruta del ejecutable para la tarea programada.");
-                    return;
-                }
-                string command = $"/create /tn \"{TaskName}\" /tr \"\"{appPath}\"\" /sc daily /st 22:00 /f";
-
-                ProcessStartInfo startInfo = new ProcessStartInfo("schtasks.exe", command)
-                {
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
-
-                using (Process? process = Process.Start(startInfo)) // Posiblemente nulo
-                {
-                    if (process == null)
-                    {
-                        Console.WriteLine("Error: No se pudo iniciar el proceso schtasks.exe para añadir la tarea programada.");
-                        return;
-                    }
-                    process.WaitForExit();
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    if (process.ExitCode != 0)
-                    {
-                        Console.WriteLine($"Error adding scheduled task: {error}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Scheduled task '{TaskName}' added successfully.");
-                    }
-                }
+                logger.LogError("FATAL: Environment.ProcessPath es nulo o vacío. No se puede crear la tarea programada.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Program.ServiceProvider?.GetService<ILogger>()?.LogException(ex);
-            }
+
+            string timeString = alarmTime.ToString("HH:mm");
+
+            // Correctly format the /tr argument for schtasks. This is complex.
+            // The entire value for the /tr parameter must be enclosed in quotes.
+            // Inside that value, the executable path itself must also be quoted.
+            // Final desired /tr value: "\"C:\Path\To\App.exe\" ALARM_TRIGGER"
+            string commandToRun = $"\\\"{executablePath}\\\" ALARM_TRIGGER";
+
+            // The arguments string passed to Process.Start needs to see the value for /tr as a single quoted string.
+            string arguments = $"/create /tn \"{TaskName}\" /tr \"{commandToRun}\" /sc DAILY /st {timeString} /f /rl HIGHEST";
+
+            ExecuteSchtasks(arguments, logger, "crear/actualizar");
         }
 
-        public static void RemoveScheduledTask()
+        public static void DeleteScheduledTask(ILogger logger)
         {
-            try
-            {
-                string command = $"/delete /tn \"{TaskName}\" /f";
-
-                ProcessStartInfo startInfo = new ProcessStartInfo("schtasks.exe", command)
-                {
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                };
-
-                using (Process? process = Process.Start(startInfo)) // Posiblemente nulo
-                {
-                    if (process == null)
-                    {
-                        Console.WriteLine("Error: No se pudo iniciar el proceso schtasks.exe para eliminar la tarea programada.");
-                        return;
-                    }
-                    process.WaitForExit();
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-                    if (process.ExitCode != 0)
-                    {
-                        Console.WriteLine($"Error removing scheduled task: {error}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Scheduled task '{TaskName}' removed successfully.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Program.ServiceProvider?.GetService<ILogger>()?.LogException(ex);
-            }
+            string arguments = $"/delete /tn \"{TaskName}\" /f";
+            ExecuteSchtasks(arguments, logger, "eliminar");
         }
 
-        public static bool IsScheduledTaskExist()
+        public static bool IsScheduledTaskActive(ILogger logger)
         {
             try
             {
-                string command = $"/query /tn \"{TaskName}\" /fo list";
-
-                ProcessStartInfo startInfo = new ProcessStartInfo("schtasks.exe", command)
+                ProcessStartInfo startInfo = new ProcessStartInfo("schtasks.exe")
                 {
+                    Arguments = $"/query /tn \"{TaskName}\"",
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true
                 };
 
-                using (Process? process = Process.Start(startInfo)) // Posiblemente nulo
+                // Use Process? for nullable reference type
+                using (Process? process = Process.Start(startInfo))
                 {
-                    if (process == null)
+                    if (process == null) // Explicit null check
                     {
-                        // Si no se puede iniciar el proceso, asumimos que la tarea no existe o hay un problema.
+                        logger.LogError($"Fallo al iniciar schtasks.exe para consultar la tarea. El proceso es nulo (no se pudo crear).");
                         return false;
                     }
+
                     process.WaitForExit();
+                    // Don't read output/error unless needed, for performance/simplicity
+                    // However, for debugging purposes, we want to read it.
                     string output = process.StandardOutput.ReadToEnd();
-                    // If the task exists, schtasks /query will return 0 and output task details.
-                    // If it doesn't exist, it returns 1 and an error message.
-                    return process.ExitCode == 0 && !output.Contains("ERROR");
+                    string error = process.StandardError.ReadToEnd();
+
+                    if (process.ExitCode == 0)
+                    {
+                        logger.LogInformation($"schtasks.exe /query exited with code 0. Task '{TaskName}' found.");
+                        return true;
+                    }
+                    else
+                    {
+                        logger.LogInformation($"schtasks.exe /query exited with code {process.ExitCode}. Error: {error}. Output: {output}");
+                        return false; // Task not found or other error.
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Program.ServiceProvider?.GetService<ILogger>()?.LogException(ex);
+                logger.LogError($"Fallo al consultar schtasks.exe. Excepción: {ex.Message}");
                 return false;
             }
         }
 
-        public static void AddStartupEntry()
+        private static void ExecuteSchtasks(string arguments, ILogger logger, string operationType)
         {
             try
             {
-                RegistryKey? rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true); // Posiblemente nulo
-                if (rk == null)
+                ProcessStartInfo startInfo = new ProcessStartInfo("schtasks.exe")
                 {
-                    Console.WriteLine("Error: No se pudo abrir la clave de registro para el inicio.");
-                    return;
-                }
-                string? appPath = Process.GetCurrentProcess().MainModule?.FileName; // Posiblemente nulo
-                if (string.IsNullOrEmpty(appPath))
-                {
-                    Console.WriteLine("Error: No se pudo obtener la ruta del ejecutable para la entrada de inicio.");
-                    return;
-                }
-                rk.SetValue(AppName, appPath);
-                Console.WriteLine($"Startup entry for '{AppName}' added successfully.");
-            }
-            catch (Exception ex)
-            {
-                Program.ServiceProvider?.GetService<ILogger>()?.LogException(ex);
-            }
-        }
+                    Arguments = arguments,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                };
 
-        public static void RemoveStartupEntry()
-        {
-            try
-            {
-                RegistryKey? rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true); // Posiblemente nulo
-                if (rk == null)
-                {
-                    Console.WriteLine("Error: No se pudo abrir la clave de registro para el inicio.");
-                    return;
-                }
-                if (rk.GetValue(AppName) != null)
-                {
-                    rk.DeleteValue(AppName);
-                    Console.WriteLine($"Startup entry for '{AppName}' removed successfully.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Program.ServiceProvider?.GetService<ILogger>()?.LogException(ex);
-            }
-        }
+                logger.LogInformation($"Ejecutando schtasks.exe para {operationType}: {arguments}");
 
-        public static bool IsStartupEntryExist()
-        {
-            try
-            {
-                RegistryKey? rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"); // Posiblemente nulo
-                if (rk == null)
+                // Use Process? for nullable reference type
+                using (Process? process = Process.Start(startInfo))
                 {
-                    return false; // Si no se puede abrir la clave, asumimos que no existe la entrada.
+                    if (process == null) // Explicit null check
+                    {
+                        logger.LogError($"Fallo al iniciar schtasks.exe para {operationType}. El proceso es nulo (no se pudo crear).");
+                        return; // Exit if process couldn't be started
+                    }
+
+                    process.WaitForExit();
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+
+                    if (process.ExitCode == 0)
+                    {
+                        logger.LogInformation($"schtasks.exe ejecutado correctamente para {operationType}. Salida: {output}");
+                    }
+                    else
+                    {
+                        logger.LogError($"schtasks.exe finalizó con código {process.ExitCode} para {operationType}. Error: {error}. Salida: {output}");
+                    }
+                    // Log output and error always for better debugging, even on success.
+                    logger.LogInformation($"schtasks.exe {operationType} - Salida completa: {output}");
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        logger.LogInformation($"schtasks.exe {operationType} - Error completo: {error}");
+                    }
                 }
-                return rk.GetValue(AppName) != null;
             }
             catch (Exception ex)
             {
-                Program.ServiceProvider?.GetService<ILogger>()?.LogException(ex);
-                return false;
+                logger.LogError($"Fallo al ejecutar schtasks.exe para {operationType}. Excepción: {ex.Message}");
             }
         }
     }
