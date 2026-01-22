@@ -92,9 +92,9 @@ AlarmaSueño
 
 ```
 
-✔️ Inyección de dependencias con Microsoft.Extensions.DependencyInjection 
-✔️ UI desacoplada de la lógica de negocio 
-✔️ Preparado para futuras migraciones **WPF / MAUI**
+- ✔️ Inyección de dependencias con Microsoft.Extensions.DependencyInjection 
+- ✔️ UI desacoplada de la lógica de negocio 
+- ✔️ Preparado para futuras migraciones **WPF / MAUI**
 
 ---
 
@@ -130,9 +130,9 @@ El proyecto incluye pruebas unitarias utilizando **Moq** para validar la lógica
 * `SettingsManager`
 * `PhraseProvider`
 
-✔️ Todas las pruebas se ejecutan correctamente
-✔️ Sin dependencias directas de UI
-✔️ Enfoque en confiabilidad y regresión
+- ✔️ Todas las pruebas se ejecutan correctamente
+- ✔️ Sin dependencias directas de UI
+- ✔️ Enfoque en confiabilidad y regresión
 
 ---
 
