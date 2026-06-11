@@ -12,13 +12,9 @@ NAudio >= 2.2.1
 Windows-SDK-10 (signtool.exe)
 PowerShell >= 5.1
 
-# Estructura de Archivos Clave
+# Assets Requeridos
 AlarmaSueño/images/logo.png
 AlarmaSueño/images/boton.png
 AlarmaSueño/images/icon.ico
 AlarmaSueño/Resources/alarm_sound.mp3
 AlarmaSueño/quotes.json
-
-# Firma Digital
-Walter_Pablo_Tellez_Ayala_CodeSigning.pfx
-Walter_Pablo_Tellez_Ayala_CodeSigning.cer
