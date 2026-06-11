@@ -209,11 +209,16 @@ namespace AlarmaSueño
             var currentState = this.Enabled ? _visualState : ButtonVisualState.Disabled;
             Image? imageToDraw = GetCurrentImage(currentState);
             
-            Rectangle contentRect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-            
+            Rectangle contentRect;
             if (currentState == ButtonVisualState.Pressed)
             {
-                contentRect.Offset(PressOffset, PressOffset);
+                // Al presionar, desplazamos y reducimos el tamaño para que no se corte en los bordes
+                contentRect = new Rectangle(PressOffset, PressOffset, this.ClientSize.Width - PressOffset, this.ClientSize.Height - PressOffset);
+            }
+            else
+            {
+                // En estado normal, usamos todo el espacio disponible para un centrado perfecto
+                contentRect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
             }
             
             if (imageToDraw != null)
@@ -237,9 +242,20 @@ namespace AlarmaSueño
                     textColor = this.TextColorNormal;
                 }
                 
-                Rectangle textRect = this.ClientRectangle;
+                // Usamos el mismo contentRect para que el texto esté centrado en la superficie del botón
+                Rectangle textRect = contentRect;
 
-                TextFormatFlags flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.WordBreak;
+                // AJUSTE DE PRECISIÓN: Desplazamos el rectángulo del texto ligeramente hacia arriba 
+                // para compensar el espacio interno (leading/ascent) que añade WinForms arriba.
+                int verticalOffset = -2; 
+                textRect.Offset(0, verticalOffset);
+
+                // Añadimos NoPadding para un centrado vertical mucho más preciso en WinForms
+                TextFormatFlags flags = TextFormatFlags.HorizontalCenter | 
+                                       TextFormatFlags.VerticalCenter | 
+                                       TextFormatFlags.WordBreak | 
+                                       TextFormatFlags.NoPadding;
+                                       
                 TextRenderer.DrawText(g, this.Text, this.Font, textRect, textColor, flags);
             }
         }

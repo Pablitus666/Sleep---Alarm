@@ -17,7 +17,7 @@ namespace AlarmaSueño
             KeyPress += OnKeyPressAdvanceSegment;
         }
 
-        private void OnKeyPressAdvanceSegment(object sender, KeyPressEventArgs e)
+        private void OnKeyPressAdvanceSegment(object? sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar))
                 return;

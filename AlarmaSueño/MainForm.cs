@@ -403,7 +403,7 @@ namespace AlarmaSueño
                     btnBloquearAlarma.Enabled = false; // Disable it
                 }
 
-                UpdateAlarmTimeLabel(settings.SnoozeUntil.Value); // Show snooze time
+                UpdateAlarmTimeLabel(settings.SnoozeUntil!.Value); // Show snooze time
             }
             else
             {
